@@ -7,24 +7,134 @@
     <style>
       body {
         overflow: hidden;
+        background-color: #e7e5e4;
+      }
+      #app {
+        display: flex;
+        justify-content: center;
+      }
+      .container {
+        width: 800px;
+        min-width: 800px;
+      }
+      .center {
+        display: flex;
+        justify-content: center;
+      }
+      .title {
+        font-size: 1.25rem;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      .description {
+        margin-bottom: 0.5rem;
+      }
+      .link {
+        text-decoration: underline;
+        color: #3b82f6;
+      }
+      .link:hover {
+        color: #a855f7;
+      }
+      .empty-div {
+        display: flex;
+        width: 800px;
+        max-width: 800px;
+        margin: 0 auto;
+        margin-bottom: 0.5rem;
+      }
+      .justify-around {
+        display: flex;
+        justify-content: space-around;
+      }
+      #generate-random {
+        height: 11px;
+      }
+      .label {
+        margin-left: 0.25rem;
+        font-size: 16px;
+      }
+      .mt-2 {
+        margin-top: 0.5rem;
+      }
+      #mnemonic-input {
+        border-width: 2px;
+        border-style: solid;
+        border-color: #78716c;
+        min-width: 800px;
+        min-height: 200px;
+        background-color: white;
+      }
+      .mb-2 {
+        margin-bottom: 0.5rem;
+      }
+      #copy-button {
+        cursor: pointer;
+        color: #1d4ed8;
+        display: none;
+      }
+      #copy-button:hover {
+        text-decoration: underline;
+      }
+      #submit {
+        background-color: #1d4ed8;
+        padding: 0.5rem 1.5rem;
+        border: 1px solid #78716c;
+        color: white;
+        border-radius: 0.5rem;
+      }
+      #words-to-choose-from {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .flex-align-end {
+        display: flex;
+        align-items: flex-end;
+      }
+      .text-center {
+        text-align: center;
+      }
+      #words {
+        display: flex;
+        justify-content: center;
+        border: 1px solid #78716c;
+        padding: 0.5rem;
+        flex-wrap: wrap;
+        max-width: 800px;
+        margin: 0 auto;
+        max-height: 400px;
+        overflow: auto;
+        background-color: white;
+      }
+      .word {
+        max-width: 80px;
+        min-width: 80px;
+        margin: 0.25rem 0.75rem;
+        cursor: pointer;
+        text-align: center;
+        border-radius: 0.25rem;
+        padding: 0.5rem;
+      }
+      .word:hover {
+        background-color: #3b82f6;
+        color: white;
       }
     </style>
-    <script src="./tailwind.js"></script>
   </head>
-
-  <body class="bg-stone-200">
-    <div id="app" class="flex justify-center">
-      <div class="w-[800px] min-w-[800px]">
-        <div class="flex justify-center">
-          <div class="text-xl my-2 mt-4">
+  <body>
+    <div id="app" class="center">
+      <div class="container">
+        <div class="center">
+          <div class="title">
              key Generator
           </div>
         </div>
-        <div class="flex justify-center">
-          <div class="mb-2">
+        <div class="center">
+          <div class="description">
             Implementation of
             <a
-              class="underline text-blue-500 hover:text-purple-500"
+              class="link"
               href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki"
               >BIP39</a
             >
@@ -32,53 +142,46 @@
             remember mnemonics.
           </div>
         </div>
-        <div class="flex w-[800px] max-w-[800px] mx-auto mb-2"></div>
-        <div class="flex justify-around">
+        <div class="empty-div"></div>
+        <div class="justify-around">
           <div>
             <input
-              class="h-[11px]"
               id="generate-random"
               type="checkbox"
-            /><label class="ml-1 text-[16px]">Pick mnemonic </label>
+            /><label class="label">Pick mnemonic </label>
           </div>
         </div>
-        <div class="flex justify-center mt-2">
+        <div class="center mt-2">
           <textarea
             id="mnemonic-input"
-            class="border-2 border-stone-500 min-w-[800px] min-h-[200px] border-1 bg-white"
-            width="500"
             disabled
           ></textarea>
         </div>
-
-        <div class="flex justify-center mt-2">
+        <div class="center mt-2">
           <div id="generated-mnemonic"></div>
         </div>
-        <div class="flex justify-center mb-2">
+        <div class="center mb-2">
           <a
             id="copy-button"
-            class="cursor-pointer hover:underline text-blue-700 hidden"
             >copy</a
           >
         </div>
-        <div class="flex justify-center">
+        <div class="center">
         <button
           id="submit"
-          class="bg-blue-700 py-2 px-6 border-stone-500 border-1 text-white rounded-lg"
         >
           generate mnemonic
         </button>
         <div>
         <div
-          class="flex flex-col justify-center hidden"
           id="words-to-choose-from"
         >
-          <div class="flex justify-around mb-2">
-            <div class="flex justify-content">
+          <div class="justify-around mb-2">
+            <div class="flex-align-end">
               <div
-                class="bg-blue-500 h-[10px] w-[10px] mt-auto mb-[5px] mr-[5px]"
+                style="background-color: #3b82f6; height: 10px; width: 10px; margin-top: auto; margin-bottom: 5px; margin-right: 5px;"
               ></div>
-              <div class="mt-auto text-bottom">selected words</div>
+              <div style="margin-top: auto; vertical-align: bottom;">selected words</div>
             </div>
             <div class="text-center">
               <div class="text-center">
@@ -86,17 +189,15 @@
               </div>
               <span id="validate-mnemonic"></span>
             </div>
-            <div class="flex justify-content">
+            <div class="flex-align-end">
               <div
-                class="bg-green-500 h-[10px] w-[10px] mt-auto mb-[5px] mr-[5px]"
+                style="background-color: #22c55e; height: 10px; width: 10px; margin-top: auto; margin-bottom: 5px; margin-right: 5px;"
               ></div>
-              <div class="mt-auto text-bottom">viable last words</div>
+              <div style="margin-top: auto; vertical-align: bottom;">viable last words</div>
             </div>
           </div>
-
           <div
             id="words"
-            class="flex justify-center border border-stone-500 p-2 flex-wrap max-w-[800px] mx-auto max-h-[400px] overflow-auto bg-white"
           ></div>
         </div>
       </div>
@@ -2166,54 +2267,39 @@
         wordCount: document.getElementById("word-count"),
         validateMnemonic: document.getElementById("validate-mnemonic"),
       };
-
       ui.copyButton.onclick = () => {
         navigator.clipboard.writeText(ui.mnemonicInput.value);
         ui.copyButton.innerText = "copied";
       };
-
       ui.submitButton.addEventListener("click", async () => {
         ui.copyButton.innerText = "copy";
         const mnemonic = await generateMnemonic(englishWordList, 128);
         ui.mnemonicInput.value = mnemonic;
-        ui.copyButton.classList.remove("hidden");
+        ui.copyButton.style.display = "inline";
       });
-
       ui.pickRandom.addEventListener("click", () => {
         resetState();
         if (ui.pickRandom.checked) {
-          ui.wordsToChooseFrom.classList.remove("hidden");
-          ui.submitButton.classList.add("hidden");
-
-          ui.submitButton.classList.add("bg-stone-500");
+          ui.wordsToChooseFrom.style.display = "flex";
+          ui.submitButton.style.display = "none";
+          ui.submitButton.style.backgroundColor = "#78716c";
         } else {
-          ui.wordsToChooseFrom.classList.add("hidden");
-          ui.submitButton.classList.remove("hidden");
-          ui.submitButton.classList.remove("bg-stone-500");
+          ui.wordsToChooseFrom.style.display = "none";
+          ui.submitButton.style.display = "inline-block";
+          ui.submitButton.style.backgroundColor = "#1d4ed8";
         }
       });
     </script>
-
     <script>
       let selected = [];
       const clicked = {};
-      englishWordList.forEach(async (word, index) => {
+      englishWordList.forEach((word, index) => {
         const wordDiv = document.createElement("div");
         clicked[word] = "unselected";
         wordDiv.id = word;
         wordDiv.innerText = word;
-        wordDiv.classList.add(["max-w-[80px]"]);
-        wordDiv.classList.add(["min-w-[80px]"]);
-        wordDiv.classList.add(["mx-3"]);
-        wordDiv.classList.add(["cursor-pointer"]);
-        wordDiv.classList.add(["hover:bg-blue-500"]);
-        wordDiv.classList.add(["hover:text-white"]);
-        wordDiv.classList.add(["text-center"]);
-        wordDiv.classList.add(["rounded"]);
-        wordDiv.classList.add(["p-2"]);
-        wordDiv.classList.add(["m-1"]);
+        wordDiv.classList.add("word");
         document.getElementById("words").appendChild(wordDiv);
-
         wordDiv.onclick = async (e) => {
           // only allow selecting 12
           if (
@@ -2223,7 +2309,6 @@
             alert("12 words already selected");
             return;
           }
-
           // validate the word they selected is acceptable
           if (selected.length === 11 && clicked[word] !== "selected") {
             const validLastWords = await getLastValidWords(
@@ -2243,12 +2328,10 @@
             clicked[word] = "unselected";
             unselectButton(wordDiv);
           }
-
           // if they unselect the 11th word we need to clear out the green words
           englishWordList
             .filter((w) => clicked[w] === "checkSum")
             .forEach(unsetButtonCheckSum);
-
           if (selected.length === 11) {
             setPossibleLastWordSelection();
           } else if (selected.length === 12) {
@@ -2267,15 +2350,13 @@
     <script>
       const setInvalid = () => {
         ui.validateMnemonic.innerText = " mnemonic is invalid";
-        ui.validateMnemonic.classList.add("text-red-500");
-        ui.validateMnemonic.classList.remove("text-green-500");
-        ui.copyButton.classList.add("hidden");
+        ui.validateMnemonic.style.color = "#ef4444";
+        ui.copyButton.style.display = "none";
       };
       const setValid = () => {
         ui.validateMnemonic.innerText = " mnemonic is valid";
-        ui.validateMnemonic.classList.add("text-green-500");
-        ui.validateMnemonic.classList.remove("text-red-500");
-        ui.copyButton.classList.remove("hidden");
+        ui.validateMnemonic.style.color = "#22c55e";
+        ui.copyButton.style.display = "inline";
       };
       const setPossibleLastWordSelection = async () => {
         // unselect any previously selected words
@@ -2294,18 +2375,14 @@
         });
       };
       const selectButton = (wordDiv) => {
-        wordDiv.classList.add(["text-white"]);
-        wordDiv.classList.remove(["text-black"]);
-        wordDiv.classList.remove(["bg-green-500"]);
-        wordDiv.classList.add(["bg-blue-500"]);
+        wordDiv.style.color = "white";
+        wordDiv.style.backgroundColor = "#3b82f6";
         selected.push(wordDiv.innerText);
       };
       const unselectButton = (wordDiv) => {
-        wordDiv.classList.add(["text-black"]);
-        wordDiv.classList.remove(["bg-blue-500"]);
-        wordDiv.classList.remove(["bg-green-500"]);
-        wordDiv.classList.remove(["text-white"]);
-        ui.copyButton.classList.add("hidden");
+        wordDiv.style.color = "black";
+        wordDiv.style.backgroundColor = "";
+        ui.copyButton.style.display = "none";
         selected = selected.filter((w) => w !== wordDiv.innerText);
         ui.validateMnemonic.innerText = "";
       };
@@ -2316,11 +2393,11 @@
       };
       const setButtonCheckSum = (word) => {
         const element = document.getElementById(word);
-        element.classList.add("bg-green-500");
+        element.style.backgroundColor = "#22c55e";
         clicked[word] = "checkSum";
       };
       const resetState = () => {
-        ui.copyButton.classList.add("hidden");
+        ui.copyButton.style.display = "none";
         ui.mnemonicInput.value = "";
         englishWordList
           .filter((w) => clicked[w] !== "unselected")
@@ -2331,21 +2408,17 @@
     <script>
       const crypto = window.crypto;
       const subtle = crypto.subtle ?? crypto.webkitSubtle;
-
       function utf8ToBytes(str) {
         return new TextEncoder().encode(str);
       }
-
       function toBytes(data) {
         if (typeof data === "string") data = utf8ToBytes(data);
         return data;
       }
-
       async function sha(algorithm, input) {
         const arrayBuffer = await subtle.digest(algorithm, toBytes(input));
         return new Uint8Array(arrayBuffer);
       }
-
       async function pbkdf2(
         hashAlgorithm,
         password,
@@ -2360,7 +2433,6 @@
           false,
           ["deriveBits"]
         );
-
         const arrayBuffer = await subtle.deriveBits(
           {
             name: "PBKDF2",
@@ -2373,40 +2445,33 @@
         );
         return new Uint8Array(arrayBuffer);
       }
-
       function randomBytes(byteLength) {
         return crypto.getRandomValues(new Uint8Array(byteLength));
       }
-
       function assert(condition, message) {
         if (!condition) {
           throw new Error(message);
         }
       }
-
       function padStart(str, length, padString) {
         while (str.length < length) {
           str = padString + str;
         }
         return str;
       }
-
       function binaryToByte(bin) {
         return parseInt(bin, 2);
       }
-
       function bytesToBinary(bytes) {
         return Array.from(bytes)
           .map((x) => padStart(x.toString(2), 8, "0"))
           .join("");
       }
-
       function nfkd(str) {
         if (typeof str !== "string")
           throw new TypeError(`Invalid mnemonic type: ${typeof str}`);
         return str.normalize("NFKD");
       }
-
       function normalize(str) {
         const norm = nfkd(str);
         const words = norm.split(" ");
@@ -2414,7 +2479,6 @@
           throw new Error("Invalid mnemonic");
         return { nfkd: norm, words };
       }
-
       function assertEntropy(entropy) {
         assert(
           entropy instanceof Uint8Array &&
@@ -2422,7 +2486,6 @@
           "Invalid entropy"
         );
       }
-
       async function generateMnemonic(wordlist, strength) {
         assert(
           Number.isSafeInteger(strength) &&
@@ -2433,14 +2496,12 @@
         );
         return entropyToMnemonic(randomBytes(strength / 8), wordlist);
       }
-
       async function deriveChecksumBits(entropy) {
         const ENT = entropy.length * 8;
         const CS = ENT / 32;
         const hash = await sha("SHA-256", entropy);
         return bytesToBinary(hash).slice(0, CS);
       }
-
       async function mnemonicToEntropy(mnemonic, wordlist) {
         const { words } = normalize(mnemonic);
         assert(words.length % 3 === 0, "Invalid mnemonic");
@@ -2463,10 +2524,8 @@
         assertEntropy(entropy);
         const newChecksum = await deriveChecksumBits(entropy);
         assert(newChecksum === checksumBits, "Invalid checksum");
-
         return entropy;
       }
-
       async function entropyToMnemonic(entropy, wordlist) {
         assertEntropy(entropy);
         const entropyBits = bytesToBinary(entropy);
@@ -2479,7 +2538,6 @@
         });
         return words.join(" ");
       }
-
       async function validateMnemonic(mnemonic, wordlist) {
         try {
           await mnemonicToEntropy(mnemonic, wordlist);
@@ -2488,9 +2546,7 @@
         }
         return true;
       }
-
       const salt = (passphrase) => nfkd(`mnemonic${passphrase}`);
-
       async function mnemonicToSeed(mnemonic, passphrase = "") {
         return pbkdf2(
           "SHA-512",
@@ -2500,7 +2556,6 @@
           64
         );
       }
-
       async function getLastValidWords(mnemonicWithoutFinalWord, wordlist) {
         let possibleLastWords = await Promise.all(
           englishWordList.map(async (lastWord) => {
@@ -2519,7 +2574,6 @@
         );
         return (possibleLastWords = possibleLastWords.filter((r) => r));
       }
-
       function lpad(str, padString, length) {
         while (str.length < length) {
           str = padString + str;
