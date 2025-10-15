@@ -13,29 +13,32 @@ This BIP39 Key Generator embodies a commitment to radical simplicity, security, 
 - **Offline-First Security:** Ideal for air-gapped environments—download once, disconnect, and generate keys without any data leaving your device. This makes it trusted by security purists who demand verifiable, minimalistic tools.
 
 ## Technical Highlights
-- **Secure Randomness and Crypto Primitives:**
-  - Leverages `crypto.getRandomValues()` for entropy, ensuring high-quality randomness without external sources.
-  - Implements SHA-256 for checksums and PBKDF2 (with SHA-512 and 2048 iterations) for seed generation, all via the browser's WebCrypto API.
 - **Single-File Feat:** Achieving full BIP39 functionality in one file is remarkable—no minification tricks or hidden dependencies. The English wordlist is embedded directly in JavaScript, and all logic (from UI to crypto) is self-contained, making it portable and easy to verify.
 - **User Interface:** Clean, responsive design with color-coded feedback (e.g., selected words in green, viable checksums in light green). Includes an overlay to prevent background interactions during validation.
 - **Edge-Case Handling:** Prevents duplicate word selections, enforces 12-word limits, and provides alerts for invalid choices.
 
+### Secure Randomness and Crypto Primitives
+- Leverages `crypto.getRandomValues()` for entropy, ensuring high-quality randomness without external sources.
+- Implements SHA-256 for checksums and PBKDF2 (with SHA-512 and 2048 iterations) for seed generation, all via the browser's WebCrypto API.
+
 ## How to Use
-1. **Obtain the File:**
-   - If viewing this in a browser with the HTML rendered, simply right-click anywhere on the page and select "Save as" to download the complete file as HTML.
-   - Alternatively, copy the entire HTML code (from `<!DOCTYPE html>` to `</html>`) into a text editor and save it as `bip39-generator.html` (or any name ending in `.html`).
 
-2. **Run Locally:**
-   - Open the saved `.html` file in any modern browser (e.g., Chrome, Firefox, Edge).
-   - For maximum security, disconnect from the internet or use an air-gapped machine.
+### Obtain the File
+- If viewing this in a browser with the HTML rendered, simply right-click anywhere on the page and select "Save as" to download the complete file as HTML.
+- Alternatively, copy the entire HTML code (from `<!DOCTYPE html>` to `</html>`) into a text editor and save it as `bip39-generator.html` (or any name ending in `.html`).
 
-3. **Generate a Key:**
-   - Select 12 words from the list.
-   - As you approach the final word, viable checksum options highlight automatically.
-   - Once valid, a popup confirms and displays the mnemonic and private key (seed) with copy buttons.
-   - Use "Start Over" to reset and generate anew.
+### Run Locally
+- Open the saved `.html` file in any modern browser (e.g., Chrome, Firefox, Edge).
+- For maximum security, disconnect from the internet or use an air-gapped machine.
 
-4. **Optional Passphrase:** While not directly in the UI, you can derive seeds with a passphrase by integrating the generated mnemonic into compatible wallets.
+### Generate a Key
+- Select 12 words from the list.
+- As you approach the final word, viable checksum options highlight automatically.
+- Once valid, a popup confirms and displays the mnemonic and private key (seed) with copy buttons.
+- Use "Start Over" to reset and generate anew.
+
+### Optional Passphrase
+- While not directly in the UI, you can derive seeds with a passphrase by integrating the generated mnemonic into compatible wallets.
 
 ## Disclaimer
 Store your mnemonic phrases securely—back them up offline and never share them. This tool generates valid BIP39 mnemonics, but ultimate security depends on your handling. Always verify generated keys in a trusted wallet before use. No warranties provided; use at your own risk.
