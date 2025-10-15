@@ -5,9 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BIP39</title>
     <style>
+      :root {
+        --primary: #020a12;
+        --secondary: #183d3d;
+        --secondary-complement: #3d1818;
+        --tertiary: #6a9a85;
+        --quaternary: #a0c3b5;
+        --text: #faebd7;
+      }
+    *{
+        font-size: 1rem;
+        color: var(--text);
+        font-weight: 200;
+        font-size: 1rem;
+        line-height: 1.75;
+        font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    }
       body {
-        overflow: hidden;
-        background-color: #e7e5e4;
+        overflow: auto;
+        background-color: var(--primary);
+        color: var(--text);
+        font-weight: 200;
       }
       #app {
         display: flex;
@@ -21,20 +39,22 @@
         display: flex;
         justify-content: center;
       }
-      .title {
-        font-size: 1.25rem;
-        margin-top: 1rem;
-        margin-bottom: 0.5rem;
+      h1 {
+        color: var(--quaternary);
+        font-size: 2rem;
+        line-height: 2.50rem;
+        margin-top: .75em;
+        margin-bottom: 0.75em
       }
       .description {
         margin-bottom: 0.5rem;
       }
       .link {
         text-decoration: underline;
-        color: #3b82f6;
+        color: var(--quaternary);
       }
       .link:hover {
-        color: #a855f7;
+        color: var(--tertiary);
       }
       .empty-div {
         display: flex;
@@ -48,11 +68,11 @@
         justify-content: space-around;
       }
       #generate-random {
-        height: 11px;
+height: 1rem;
+width: 1rem;
       }
       .label {
         margin-left: 0.25rem;
-        font-size: 16px;
       }
       .mt-2 {
         margin-top: 0.5rem;
@@ -60,28 +80,37 @@
       #mnemonic-input {
         border-width: 2px;
         border-style: solid;
-        border-color: #78716c;
+        border-color: var(--secondary);
         min-width: 800px;
         min-height: 200px;
-        background-color: white;
+        background-color: var(--primary);
+        color: var(--text);
       }
       .mb-2 {
         margin-bottom: 0.5rem;
       }
-      #copy-button {
+      #copy-button, #reset-button, #show-private-key {
         cursor: pointer;
-        color: #1d4ed8;
+        background-color: var(--tertiary);
+        padding: 0.5rem 1.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        color: var(--primary);
+        font-weight: bold;
         display: none;
       }
-      #copy-button:hover {
-        text-decoration: underline;
+      #copy-button:hover, #reset-button:hover, #show-private-key:hover {
+        background-color: var(--quaternary);
       }
       #submit {
-        background-color: #1d4ed8;
+        background-color: var(--secondary);
         padding: 0.5rem 1.5rem;
-        border: 1px solid #78716c;
-        color: white;
+        border: 1px solid var(--secondary);
+        color: var(--text);
         border-radius: 0.5rem;
+      }
+      #submit:hover {
+        background-color: var(--tertiary);
       }
       #words-to-choose-from {
         display: none;
@@ -98,14 +127,12 @@
       #words {
         display: flex;
         justify-content: center;
-        border: 1px solid #78716c;
+        border: 1px solid var(--secondary);
         padding: 0.5rem;
         flex-wrap: wrap;
         max-width: 800px;
-        margin: 0 auto;
-        max-height: 400px;
-        overflow: auto;
-        background-color: white;
+        margin: 0 auto 2rem auto;
+        background-color: var(--primary);
       }
       .word {
         max-width: 80px;
@@ -117,8 +144,69 @@
         padding: 0.5rem;
       }
       .word:hover {
-        background-color: #3b82f6;
-        color: white;
+        background-color: var(--tertiary);
+        color: var(--primary);
+      }
+      #validation-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        text-align: center;
+        padding: 1rem;
+        width: 600px;
+        border-radius: 0.5rem;
+        border: 2px solid var(--secondary);
+        background-color: var(--primary);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        display: none;
+      }
+      #validate-mnemonic {
+        font-weight: bold;
+        font-size: 2rem;
+      }
+      .buttons {
+        display: flex;
+        justify-content: space-around;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      #private-key-container {
+        margin-top: 0.5rem;
+      }
+      #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9;
+      }
+      #mnemonic-container, #private-key-container {
+        display: flex;
+        align-items: center;
+        margin-top: 1rem;
+        text-align: left;
+      }
+      #copy-mnemonic-btn, #copy-private-btn {
+        margin-right: 0.5rem;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+        background-color: var(--tertiary);
+        color: var(--primary);
+        border: none;
+        border-radius: 0.25rem;
+        cursor: pointer;
+      }
+      #copy-mnemonic-btn:hover, #copy-private-btn:hover {
+        background-color: var(--quaternary);
+      }
+      #mnemonic-text, #private-key-text {
+        word-break: break-all;
+        max-width: 500px;
       }
     </style>
   </head>
@@ -126,9 +214,9 @@
     <div id="app" class="center">
       <div class="container">
         <div class="center">
-          <div class="title">
-             key Generator
-          </div>
+          <h1>
+             Key Generator
+          </h1>
         </div>
         <div class="center">
           <div class="description">
@@ -143,14 +231,6 @@
           </div>
         </div>
         <div class="empty-div"></div>
-        <div class="justify-around">
-          <div>
-            <input
-              id="generate-random"
-              type="checkbox"
-            /><label class="label">Pick mnemonic </label>
-          </div>
-        </div>
         <div class="center mt-2">
           <textarea
             id="mnemonic-input"
@@ -160,12 +240,7 @@
         <div class="center mt-2">
           <div id="generated-mnemonic"></div>
         </div>
-        <div class="center mb-2">
-          <a
-            id="copy-button"
-            >copy</a
-          >
-        </div>
+      
         <div class="center">
         <button
           id="submit"
@@ -179,7 +254,7 @@
           <div class="justify-around mb-2">
             <div class="flex-align-end">
               <div
-                style="background-color: #3b82f6; height: 10px; width: 10px; margin-top: auto; margin-bottom: 5px; margin-right: 5px;"
+                style="background-color: var(--tertiary); height: 1rem; width: 1rem; margin-top: auto; margin-bottom: auto; margin-right: 5px;"
               ></div>
               <div style="margin-top: auto; vertical-align: bottom;">selected words</div>
             </div>
@@ -187,21 +262,40 @@
               <div class="text-center">
                 choose 12 words <span id="word-count">(0/12)</span>
               </div>
-              <span id="validate-mnemonic"></span>
             </div>
             <div class="flex-align-end">
               <div
-                style="background-color: #22c55e; height: 10px; width: 10px; margin-top: auto; margin-bottom: 5px; margin-right: 5px;"
+                style="background-color: var(--quaternary); height: 1rem; width: 1rem; margin-top: auto; margin-bottom: auto; margin-right: 5px;"
               ></div>
               <div style="margin-top: auto; vertical-align: bottom;">viable last words</div>
             </div>
           </div>
+<div class="center mb-2">
+              <div id="validation-container">
+                <div id="validate-mnemonic"></div>
+                <div id="mnemonic-container" style="display: none;">
+                  <button id="copy-mnemonic-btn">Copy</button>
+                  <div>Mnemonic: <span id="mnemonic-text"></span></div>
+                </div>
+                <div id="private-key-container" style="display: none;">
+                  <button id="copy-private-btn">Copy</button>
+                  <div>Private Key: <span id="private-key-text"></span></div>
+                </div>
+                <div class="buttons" >
+                  <button
+                    id="reset-button"
+                    >Start Over</button
+                  >
+                </div>
+              </div>
+                </div>
           <div
             id="words"
           ></div>
         </div>
       </div>
     </div>
+    <div id="overlay"></div>
     <!-- init state and event setting -->
     <script>
       const englishWordList = [
@@ -2259,36 +2353,41 @@
       const ui = {
         submitButton: document.getElementById("submit"),
         generatedMnemonic: document.getElementById("generated-mnemonic"),
-        pickRandom: document.getElementById("generate-random"),
-        usePassphrase: document.getElementById("use-passphrase"),
         mnemonicInput: document.getElementById("mnemonic-input"),
-        copyButton: document.getElementById("copy-button"),
+        resetButton: document.getElementById("reset-button"),
         wordsToChooseFrom: document.getElementById("words-to-choose-from"),
         wordCount: document.getElementById("word-count"),
         validateMnemonic: document.getElementById("validate-mnemonic"),
+        validationContainer: document.getElementById("validation-container"),
+        overlay: document.getElementById("overlay"),
+        mnemonicContainer: document.getElementById("mnemonic-container"),
+        privateKeyContainer: document.getElementById("private-key-container"),
+        mnemonicText: document.getElementById("mnemonic-text"),
+        privateKeyText: document.getElementById("private-key-text"),
+        copyMnemonicBtn: document.getElementById("copy-mnemonic-btn"),
+        copyPrivateBtn: document.getElementById("copy-private-btn"),
       };
-      ui.copyButton.onclick = () => {
-        navigator.clipboard.writeText(ui.mnemonicInput.value);
-        ui.copyButton.innerText = "copied";
+      ui.copyMnemonicBtn.onclick = () => {
+        navigator.clipboard.writeText(ui.mnemonicInput.value).then(() => {
+          ui.copyMnemonicBtn.innerText = "Copied";
+          setTimeout(() => ui.copyMnemonicBtn.innerText = "Copy", 2000);
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+        });
       };
-      ui.submitButton.addEventListener("click", async () => {
-        ui.copyButton.innerText = "copy";
-        const mnemonic = await generateMnemonic(englishWordList, 128);
-        ui.mnemonicInput.value = mnemonic;
-        ui.copyButton.style.display = "inline";
-      });
-      ui.pickRandom.addEventListener("click", () => {
+      ui.copyPrivateBtn.onclick = () => {
+        navigator.clipboard.writeText(ui.privateKeyText.innerText).then(() => {
+          ui.copyPrivateBtn.innerText = "Copied";
+          setTimeout(() => ui.copyPrivateBtn.innerText = "Copy", 2000);
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+      };
+      ui.resetButton.onclick = () => {
         resetState();
-        if (ui.pickRandom.checked) {
-          ui.wordsToChooseFrom.style.display = "flex";
-          ui.submitButton.style.display = "none";
-          ui.submitButton.style.backgroundColor = "#78716c";
-        } else {
-          ui.wordsToChooseFrom.style.display = "none";
-          ui.submitButton.style.display = "inline-block";
-          ui.submitButton.style.backgroundColor = "#1d4ed8";
-        }
-      });
+      };
+      ui.wordsToChooseFrom.style.display = "flex";
+      ui.submitButton.style.display = "none";
     </script>
     <script>
       let selected = [];
@@ -2328,6 +2427,8 @@
             clicked[word] = "unselected";
             unselectButton(wordDiv);
           }
+          ui.mnemonicInput.value = selected.join(" ");
+          ui.wordCount.innerText = `(${selected.length}/12)`;
           // if they unselect the 11th word we need to clear out the green words
           englishWordList
             .filter((w) => clicked[w] === "checkSum")
@@ -2339,24 +2440,43 @@
               selected.join(" "),
               englishWordList
             );
-            isValid ? setValid() : setInvalid();
+            isValid ? await setValid() : setInvalid();
+          } else {
+            ui.validateMnemonic.innerText = "";
+            ui.validationContainer.style.display = "none";
+            ui.overlay.style.display = "none";
+            ui.mnemonicContainer.style.display = "none";
+            ui.privateKeyContainer.style.display = "none";
+            ui.resetButton.style.display = "none";
           }
-          ui.wordCount.innerText = `(${selected.length}/12)`;
-          ui.mnemonicInput.value = selected.join(" ");
         };
       });
     </script>
     <!-- UI helpers here -->
     <script>
       const setInvalid = () => {
-        ui.validateMnemonic.innerText = " mnemonic is invalid";
-        ui.validateMnemonic.style.color = "#ef4444";
-        ui.copyButton.style.display = "none";
+        ui.validateMnemonic.innerText = "Mnemonic is invalid";
+        ui.validateMnemonic.style.color = "var(--secondary-complement)";
+        ui.validationContainer.style.borderColor = "var(--secondary-complement)";
+        ui.validationContainer.style.display = "block";
+        ui.overlay.style.display = "block";
+        ui.mnemonicContainer.style.display = "none";
+        ui.privateKeyContainer.style.display = "none";
+        ui.resetButton.style.display = "block";
       };
-      const setValid = () => {
-        ui.validateMnemonic.innerText = " mnemonic is valid";
-        ui.validateMnemonic.style.color = "#22c55e";
-        ui.copyButton.style.display = "inline";
+      const setValid = async () => {
+        ui.validateMnemonic.innerText = "Mnemonic is valid";
+        ui.validateMnemonic.style.color = "var(--quaternary)";
+        ui.validationContainer.style.borderColor = "var(--quaternary)";
+        ui.validationContainer.style.display = "block";
+        ui.overlay.style.display = "block";
+        ui.mnemonicContainer.style.display = "flex";
+        ui.privateKeyContainer.style.display = "flex";
+        ui.resetButton.style.display = "block";
+        ui.mnemonicText.innerText = ui.mnemonicInput.value;
+        const seed = await mnemonicToSeed(ui.mnemonicInput.value);
+        const seedHex = Array.from(seed).map(b => b.toString(16).padStart(2, '0')).join('');
+        ui.privateKeyText.innerText = seedHex;
       };
       const setPossibleLastWordSelection = async () => {
         // unselect any previously selected words
@@ -2375,16 +2495,20 @@
         });
       };
       const selectButton = (wordDiv) => {
-        wordDiv.style.color = "white";
-        wordDiv.style.backgroundColor = "#3b82f6";
+        wordDiv.style.color = "var(--primary)";
+        wordDiv.style.backgroundColor = "var(--tertiary)";
         selected.push(wordDiv.innerText);
       };
       const unselectButton = (wordDiv) => {
-        wordDiv.style.color = "black";
+        wordDiv.style.color = "var(--text)";
         wordDiv.style.backgroundColor = "";
-        ui.copyButton.style.display = "none";
         selected = selected.filter((w) => w !== wordDiv.innerText);
         ui.validateMnemonic.innerText = "";
+        ui.validationContainer.style.display = "none";
+        ui.overlay.style.display = "none";
+        ui.mnemonicContainer.style.display = "none";
+        ui.privateKeyContainer.style.display = "none";
+        ui.resetButton.style.display = "none";
       };
       const unsetButtonCheckSum = (word) => {
         clicked[word] = "unselected";
@@ -2393,15 +2517,23 @@
       };
       const setButtonCheckSum = (word) => {
         const element = document.getElementById(word);
-        element.style.backgroundColor = "#22c55e";
+        element.style.backgroundColor = "var(--quaternary)";
         clicked[word] = "checkSum";
       };
       const resetState = () => {
-        ui.copyButton.style.display = "none";
+        ui.resetButton.style.display = "none";
         ui.mnemonicInput.value = "";
+        ui.validateMnemonic.innerText = "";
+        ui.validationContainer.style.display = "none";
+        ui.overlay.style.display = "none";
+        ui.mnemonicContainer.style.display = "none";
+        ui.privateKeyContainer.style.display = "none";
+        ui.copyMnemonicBtn.innerText = "Copy";
+        ui.copyPrivateBtn.innerText = "Copy";
         englishWordList
           .filter((w) => clicked[w] !== "unselected")
           .forEach((w) => unselectButton(document.getElementById(w)));
+        window.scrollTo(0, 0);
       };
     </script>
     <!-- crypto logic here -->
