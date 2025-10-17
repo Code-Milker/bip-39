@@ -121,19 +121,37 @@ width: 1rem;
         text-align: center;
       }
       #words {
-        display: flex;
-        justify-content: center;
-        border: 1px solid var(--secondary);
+        display: grid;
+        grid-template-rows: repeat(5, auto);
+        grid-auto-flow: column;
+        grid-auto-columns: 110px;
+        row-gap: 0.5rem;
+        column-gap: 1.5rem;
         padding: 0.5rem;
-        flex-wrap: wrap;
-        max-width: 800px;
+        border: 1px solid var(--secondary);
+        width: 800px;
+        overflow-x: auto;
+        overflow-y: hidden;
         margin: 0 auto 2rem auto;
         background-color: var(--primary);
       }
+      #words::-webkit-scrollbar {
+        height: 8px;
+      }
+      #words::-webkit-scrollbar-track {
+        background: var(--primary);
+      }
+      #words::-webkit-scrollbar-thumb {
+        background: var(--tertiary);
+        border-radius: 4px;
+      }
+      #words::-webkit-scrollbar-thumb:hover {
+        background: var(--quaternary);
+      }
       .word {
-        max-width: 80px;
-        min-width: 80px;
-        margin: 0.25rem 0.75rem;
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0;
         cursor: pointer;
         text-align: center;
         border-radius: 0.25rem;
@@ -211,20 +229,10 @@ width: 1rem;
       <div class="container">
         <div class="center">
           <h1>
-             Key Generator
+             BIP39 Key and Mnemonic Generator
           </h1>
         </div>
         <div class="center">
-          <div class="description">
-            Implementation of
-            <a
-              class="link"
-              href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki"
-              >BIP39</a
-            >
-            which allows for deterministic keys to be generated from easy to
-            remember mnemonics.
-          </div>
         </div>
         <div class="empty-div"></div>
         <div class="center mt-2">
@@ -236,7 +244,7 @@ width: 1rem;
         <div class="center mt-2">
           <div id="generated-mnemonic"></div>
         </div>
-      
+     
         <div class="center">
         <button
           id="submit"
