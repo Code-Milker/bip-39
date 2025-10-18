@@ -20,16 +20,26 @@
         font-size: 1rem;
         line-height: 1.75;
         font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+        box-sizing: border-box;
+    }
+    html {
+      height: 100%;
     }
       body {
         overflow: auto;
         background-color: var(--primary);
         color: var(--text);
         font-weight: 200;
+        margin: 0;
+        padding: 0;
+        height: 100%;
       }
       #app {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100%;
       }
       .center {
         display: flex;
@@ -37,7 +47,7 @@
       }
       h1 {
         color: var(--quaternary);
-        font-size: 2rem;
+        font-size: 1.25rem;
         line-height: 2.50rem;
         margin-top: .75em;
         margin-bottom: 0.75em
@@ -54,8 +64,7 @@
       }
       .empty-div {
         display: flex;
-        width: 800px;
-        max-width: 800px;
+        width: 100%;
         margin: 0 auto;
         margin-bottom: 0.5rem;
       }
@@ -77,7 +86,7 @@ width: 1rem;
         border-width: 2px;
         border-style: solid;
         border-color: var(--secondary);
-        min-width: 800px;
+        width: 100%;
         min-height: 200px;
         background-color: var(--primary);
         color: var(--text);
@@ -121,18 +130,18 @@ width: 1rem;
         text-align: center;
       }
       #words {
+        width: 750px;
         display: grid;
         grid-template-rows: repeat(5, auto);
         grid-auto-flow: column;
-        grid-auto-columns: 110px;
+        grid-auto-columns: minmax(100px, 110px);
         row-gap: 0.5rem;
         column-gap: 1.5rem;
         padding: 0.5rem;
         border: 1px solid var(--secondary);
-        width: 800px;
         overflow-x: auto;
         overflow-y: hidden;
-        margin: 0 auto 2rem auto;
+        margin: 0 auto 0.5rem auto;
         background-color: var(--primary);
       }
       #words::-webkit-scrollbar {
@@ -169,7 +178,8 @@ width: 1rem;
         z-index: 10;
         text-align: center;
         padding: 1rem;
-        width: 600px;
+        width: 90%;
+        max-width: 600px;
         border-radius: 0.5rem;
         border: 2px solid var(--secondary);
         background-color: var(--primary);
@@ -222,10 +232,48 @@ width: 1rem;
         word-break: break-all;
         max-width: 500px;
       }
+      .container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+      .nav-button {
+        background-color: var(--secondary);
+        padding: 0.5rem 1.5rem;
+        border: 1px solid var(--secondary);
+        color: var(--text);
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+      .nav-button:hover {
+        background-color: var(--tertiary);
+      }
+      .nav-button:disabled {
+        background-color: var(--secondary);
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      @media (max-width: 600px) {
+        #words {
+          grid-auto-columns: minmax(80px, 100px);
+          column-gap: 1rem;
+        }
+        h1 {
+          font-size: 1rem;
+        }
+        #validate-mnemonic {
+          font-size: 1.5rem;
+        }
+        .word {
+          padding: 0.25rem;
+          font-size: 0.9rem;
+        }
+      }
     </style>
   </head>
   <body>
-    <div id="app" class="center">
+    <div id="app">
       <div class="container">
         <div class="center">
           <h1>
@@ -244,7 +292,7 @@ width: 1rem;
         <div class="center mt-2">
           <div id="generated-mnemonic"></div>
         </div>
-     
+   
         <div class="center">
         <button
           id="submit"
@@ -296,6 +344,10 @@ width: 1rem;
           <div
             id="words"
           ></div>
+          <div class="justify-around mt-2">
+            <button id="prev-btn" class="nav-button">Previous</button>
+            <button id="next-btn" class="nav-button">Next</button>
+          </div>
         </div>
       </div>
     </div>
@@ -2097,7 +2149,7 @@ width: 1rem;
         "that",
         "theme",
         "then",
-        "theory",
+        " theory",
         "there",
         "they",
         "thing",
@@ -2455,6 +2507,21 @@ width: 1rem;
           }
         };
       });
+      const wordsDiv = document.getElementById('words');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const updateButtons = () => {
+        prevBtn.disabled = wordsDiv.scrollLeft <= 0;
+        nextBtn.disabled = wordsDiv.scrollLeft >= wordsDiv.scrollWidth - wordsDiv.clientWidth - 1; // -1 for floating point precision
+      };
+      wordsDiv.addEventListener('scroll', updateButtons);
+      prevBtn.onclick = () => {
+        wordsDiv.scrollBy({ left: -wordsDiv.clientWidth, behavior: 'smooth' });
+      };
+      nextBtn.onclick = () => {
+        wordsDiv.scrollBy({ left: wordsDiv.clientWidth, behavior: 'smooth' });
+      };
+      updateButtons();
     </script>
     <!-- UI helpers here -->
     <script>
